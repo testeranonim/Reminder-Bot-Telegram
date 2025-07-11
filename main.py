@@ -1,13 +1,14 @@
 import asyncio
 import os
-import sqlite3
 import logging
 
 from aiogram import Router, Bot, Dispatcher
 from aiogram.types import BotCommand, BotCommandScopeDefault
 from aiogram.client.bot import DefaultBotProperties
 
-from handlers import bot_commands, bot_start
+from handlers import command_add, command_start
+from callbacks import inline_callback
+from db.database import init_db
 
 from dotenv import load_dotenv
 
@@ -22,6 +23,8 @@ async def main():
     dp = Dispatcher()
     bot = Bot(token, default=DefaultBotProperties(parse_mode='HTML'))
     
+    await init_db()
+    
     async def set_commands():
         commands = [
             BotCommand(command='start', description='Ехала'),
@@ -31,8 +34,9 @@ async def main():
         await bot.set_my_commands(commands, BotCommandScopeDefault())
     
     dp.include_routers(
-        bot_start.start_router,
-        bot_commands.add_router,
+        command_start.start_router,
+        command_add.add_router,
+        inline_callback.call_router,
     )
     
     dp.include_router(router)

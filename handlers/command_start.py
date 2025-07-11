@@ -2,6 +2,8 @@ from aiogram import Router
 from aiogram.types import Message, FSInputFile
 from aiogram.filters import CommandStart
 
+from keyboards import kbs
+
 start_router = Router()
 
 @start_router.message(CommandStart())
@@ -12,4 +14,4 @@ async def start(message: Message):
         '\n\n/add — добавить напоминание в список'
         '\n/list — показать все записи'
     )
-    await message.answer_photo(photo=photo, caption=text_message)
+    await message.answer_photo(photo=photo, caption=text_message, reply_markup=kbs.menu)
