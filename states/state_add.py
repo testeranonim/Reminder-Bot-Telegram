@@ -1,4 +1,4 @@
 from aiogram.fsm.state import StatesGroup, State
 
 class AddMemory(StatesGroup):
-    add = State()
+    waiting_for_time = State()

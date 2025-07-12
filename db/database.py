@@ -26,7 +26,7 @@ async def init_db():
             id INTEGER PRIMARY KEY AUTOINCREMENT,
             user_id INTEGER NOT NULL,
             text TEXT NOT NULL,
-            remind_at TIMESTAMP NOT NULL,
+            remind_at TEXT NOT NULL,
             is_active BOOLEAN DEFAULT 1,
             created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
             FOREIGN KEY (user_id) REFERENCES users(user_id) ON DELETE CASCADE
@@ -43,13 +43,12 @@ async def add_user(user_id: int, first_name: str) -> None:
         )
         await db.commit()
 
-async def add_reminder(user_id: int, text: str, hours: int = 24) -> None:
-    """Добавляние напоминания на +N часов"""
-    from datetime import datetime, timedelta
-    remind_at = datetime.now() + timedelta(hours=hours)
-    
+async def add_reminder(user_id: int, text: str, remind_at: str) -> None:
+    """Добавление напоминания с указанием времени"""
     async with aiosqlite.connect('memory.db') as db:
+        await db.execute("PRAGMA foreign_keys = ON")
         await db.execute(
-            "INSERT INTO reminders (user_id, text, remind_at) VALUES (?, ?, ?)", (user_id, text, remind_at.isoformat())
+            "INSERT INTO reminders (user_id, text, remind_at) VALUES (?, ?, ?)",
+            (user_id, text, remind_at)
         )
         await db.commit()
