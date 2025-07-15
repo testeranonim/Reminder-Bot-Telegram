@@ -9,6 +9,7 @@ from aiogram.client.bot import DefaultBotProperties
 from handlers import command_add, command_start
 from callbacks import inline_callback
 from db.database import init_db
+from db.scheduler import check_reminders
 
 from dotenv import load_dotenv
 
@@ -20,10 +21,17 @@ load_dotenv()
 token = os.getenv('token')
 
 async def main():
+    
+    logging.basicConfig(
+        level=logging.INFO,
+        format='%(asctime)s - %(name)s - %(levelname)s - $(message)s'
+    )
+    
     dp = Dispatcher()
     bot = Bot(token, default=DefaultBotProperties(parse_mode='HTML'))
     
     await init_db()
+    asyncio.create_task(check_reminders(bot))
     
     async def set_commands():
         commands = [
