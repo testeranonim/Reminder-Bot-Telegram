@@ -1,3 +1,4 @@
+
 import aiosqlite
 import logging
 
@@ -81,3 +82,24 @@ async def delete_reminder(reminder_id: int):
     async with aiosqlite.connect('memory.db') as db:
         await db.execute("DELETE FROM reminders WHERE id = ?", (reminder_id,))
         await db.commit()
+
+async def get_user_reminders(user_id: int, page: int = 1, per_page: int = 5):
+    offset = (page - 1) * per_page
+    async with aiosqlite.connect('memory.db') as db:
+        cursor = await db.execute(
+            "SELECT id, text, remind_at FROM reminders "
+            "WHERE user_id = ? "
+            "ORDER BY id DESC "
+            "LIMIT ? OFFSET ?",
+            (user_id, per_page, offset)
+        )
+        return await cursor.fetchall()
+
+async def count_user_reminders(user_id: int):
+    async with aiosqlite.connect('memory.db') as db:
+        cursor = await db.execute(
+            "SELECT COUNT(*) FROM reminders WHERE user_id = ?",
+            (user_id,)
+        )
+        result = await cursor.fetchone()
+        return result[0] if result else None

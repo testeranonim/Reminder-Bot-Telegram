@@ -16,5 +16,6 @@ db/__init__.py
 callbacks/__pycache__/
 callbacks/__init__.py
 callbacks/__pycache__/inline_callback.cpython-312.pyc
+callbacks/__pycache__/inline_callback.cpython-312.pyc
 
 memory.db

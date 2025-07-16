@@ -1,3 +1,4 @@
+
 from aiogram import Router
 from aiogram.types import Message, FSInputFile
 from aiogram.filters import CommandStart
@@ -18,4 +19,4 @@ async def start(message: Message):
         '\n/add Сварить рис 2025-07-15 9:45</blockquote>'
         '\nГОД-МЕСЯЦ-ЧИСЛО ЧЧ:ММ'
     )
-    await message.answer_photo(photo=photo, caption=text_message, reply_markup=kbs.menu)
+    await message.answer_photo(photo=photo, caption=text_message, reply_markup=kbs.link)

@@ -1,3 +1,4 @@
+
 import asyncio
 import os
 import logging
@@ -6,8 +7,8 @@ from aiogram import Router, Bot, Dispatcher
 from aiogram.types import BotCommand, BotCommandScopeDefault
 from aiogram.client.bot import DefaultBotProperties
 
-from handlers import command_add, command_start
-from callbacks import inline_callback
+from handlers import command_add, command_list, command_start
+from callbacks import pagination_list
 from db.database import init_db
 from db.scheduler import check_reminders
 
@@ -44,7 +45,8 @@ async def main():
     dp.include_routers(
         command_start.start_router,
         command_add.add_router,
-        inline_callback.call_router,
+        command_list.list_router,
+        pagination_list.call_router,
     )
     
     dp.include_router(router)
